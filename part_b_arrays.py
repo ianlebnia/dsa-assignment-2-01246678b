@@ -143,7 +143,7 @@ def b4_explanation():
       2. Why a single append can cost O(N) in the worst case.
       3. Why the amortised cost per append is still considered O(1).
     """
-   
+   #Python lists store elements in a contiguous block of memory. When the current storage is full, the list allocates a larger block and copies the existing items into it. That resize step can take O(N) time because every existing element must be moved. A single append can therefore be expensive in the worst case. However, the list grows geometrically (for example, doubling its capacity), so the expensive resize happens rarely. Over many appends, the total cost stays proportional to the number of appended items, giving an amortised cost of O(1) per append on average.
     return """
     Explanation of amortised O(1) for Python list append:
 
