@@ -33,7 +33,16 @@ def binary_search(arr, target):
         Best-case time complexity:  O(?)  -- when does this occur?
         Worst-case time complexity: O(?)  -- when does this occur?
     """
-    # TODO: Implement binary search here.
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        if arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
     pass
 
 
@@ -63,7 +72,16 @@ def find_pair_with_sum(arr, target):
         Time: O(N)
         Space: O(1)
     """
-    # TODO: Implement the two-pointer technique here.
+    left, right = 0, len(arr) - 1
+    while left < right:
+        current_sum = arr[left] + arr[right]
+        if current_sum == target:
+            return (arr[left], arr[right])
+        if current_sum < target:
+            left += 1
+        else:
+            right -= 1
+    return None
     pass
 
 
@@ -91,7 +109,23 @@ def rotate_array(arr, k):
         Time: O(N)
         Space: O(1)
     """
-    # TODO: Implement the in-place rotation here.
+    if not arr:
+        return
+
+    n = len(arr)
+    k %= n
+    if k == 0:
+        return
+
+    def reverse_slice(start, end):
+        while start < end:
+            arr[start], arr[end] = arr[end], arr[start]
+            start += 1
+            end -= 1
+
+    reverse_slice(0, n - 1)
+    reverse_slice(0, k - 1)
+    reverse_slice(k, n - 1)
     pass
 
 
@@ -109,11 +143,11 @@ def b4_explanation():
       2. Why a single append can cost O(N) in the worst case.
       3. Why the amortised cost per append is still considered O(1).
     """
-    # TODO: Replace this string with your full written answer.
+   
     return """
     Explanation of amortised O(1) for Python list append:
 
-    (your answer here)
+    (Python lists store elements in a contiguous block of memory. When the current storage is full, the list allocates a larger block and copies the existing items into it. That resize step can take O(N) time because every existing element must be moved. A single append can therefore be expensive in the worst case. However, the list grows geometrically (for example, doubling its capacity), so the expensive resize happens rarely. Over many appends, the total cost stays proportional to the number of appended items, giving an amortised cost of O(1) per append on average.)
     """
 
 
