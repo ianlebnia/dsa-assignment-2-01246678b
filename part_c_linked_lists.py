@@ -29,7 +29,11 @@ class Booking:
         prev         (Booking | None): Reference to the previous node.
     """
     def __init__(self, booking_id, student_name, destination):
-        # TODO: Initialise all five attributes.
+        self.booking_id = booking_id
+        self.student_name = student_name
+        self.destination = destination
+        self.next = None
+        self.prev = None
         pass
 
     def __repr__(self):
@@ -41,7 +45,8 @@ class ShuttleList:
     A doubly linked list of Booking nodes with head and tail pointers.
     """
     def __init__(self):
-        # TODO: Initialise head and tail to None.
+       self.head = None
+        self.tail = None
         pass
 
     # -------------------------------------------------------------------------
@@ -57,7 +62,15 @@ class ShuttleList:
         Time complexity WITHOUT tail pointer: O(?)
         (Fill in your answer in the docstring.)
         """
-        # TODO: Implement add_booking.
+         new_booking = Booking(booking_id, student_name, destination)
+        if self.tail is None:
+            self.head = new_booking
+            self.tail = new_booking
+        else:
+            self.tail.next = new_booking
+            new_booking.prev = self.tail
+            self.tail = new_booking
+
         pass
 
     # -------------------------------------------------------------------------
@@ -75,7 +88,24 @@ class ShuttleList:
         Returns:
             bool: True if deleted, False if not found.
         """
-        # TODO: Implement cancel_booking handling all three cases.
+        current = self.head
+        while current is not None:
+            if current.booking_id == booking_id:
+                if current.prev is None:
+                    self.head = current.next
+                    if self.head is not None:
+                        self.head.prev = None
+                    else:
+                        self.tail = None
+                elif current.next is None:
+                    self.tail = current.prev
+                    self.tail.next = None
+                else:
+                    current.prev.next = current.next
+                    current.next.prev = current.prev
+                return True
+            current = current.next
+        return False
         pass
 
     # -------------------------------------------------------------------------
@@ -94,8 +124,27 @@ class ShuttleList:
         Time complexity: O(?)  -- fill in your answer.
         Why swap data instead of relinking pointers? (write your answer in a comment below)
         """
-        # TODO: Implement find_and_swap.
-        # Answer: swapping data is preferred because ...
+        current = self.head
+        node1 = None
+        node2 = None
+        while current is not None:
+            if current.booking_id == id1:
+                node1 = current
+            elif current.booking_id == id2:
+                node2 = current
+            if node1 is not None and node2 is not None:
+                break
+            current = current.next
+
+        if node1 is None or node2 is None:
+            return False
+
+        # Swapping data is preferred because the pointer structure of the doubly linked list
+        # does not need to change; only the values stored in the nodes are exchanged.
+        node1.booking_id, node2.booking_id = node2.booking_id, node1.booking_id
+        node1.student_name, node2.student_name = node2.student_name, node1.student_name
+        node1.destination, node2.destination = node2.destination, node1.destination
+        return True
         pass
 
     # -------------------------------------------------------------------------
@@ -124,33 +173,38 @@ class RouteHistory:
     Backed by a Python list (used as a stack).
     """
     def __init__(self):
-        # TODO: Initialise internal storage.
+         self.items = []
         pass
 
     def push(self, change):
         """
         Record a new route change string.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement push.
+        self.items.append(change)
         pass
 
     def pop_undo(self):
         """
         Undo and return the most recent route change.
         Return None if there is nothing to undo.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement pop_undo.
+        if not self.items:
+            return None
+        return self.items.pop()
         pass
 
     def peek(self):
         """
         Return the most recent route change without removing it.
         Return None if the history is empty.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement peek.
+         if not self.items:
+            return None
+        return self.items[-1]
+
         pass
 
 
@@ -167,44 +221,50 @@ class BoardingQueue:
     Backed by collections.deque.
 
     Why deque instead of list?
-    # TODO: Write your explanation here as a comment.
+    # deque is better than a list for queue operations because appending to the back and
+    # removing from the front are both O(1) operations with deque, while a plain list would
+    # require shifting elements for pop(0) or insert(0), making those operations O(N).
     """
     def __init__(self):
-        # TODO: Initialise the deque.
+        self._deque = deque()
         pass
 
-    def join(self, student_name):
+   def join(self, student_name):
         """
         A student joins the back of the queue.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement join.
+        self._deque.append(student_name)
         pass
 
     def board(self):
         """
         The next student boards (removed from the front).
         Return None if the queue is empty.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement board.
+        if not self._deque:
+            return None
+        return self._deque.popleft()
         pass
 
-    def peek_next(self):
+     def peek_next(self):
         """
         Return the name of the next student to board without removing them.
         Return None if the queue is empty.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement peek_next.
+        if not self._deque:
+            return None
+        return self._deque[0]
         pass
 
     def size(self):
         """
         Return the number of students currently in the queue.
-        Time complexity: O(?)
+        Time complexity: O(1)
         """
-        # TODO: Implement size.
+        return len(self._deque)
         pass
 
 
