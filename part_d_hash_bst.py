@@ -23,15 +23,15 @@ def d1_explanation():
     """
     # TODO: Replace this string with your full written answer.
     return """
-    Hash collision definition: (your answer)
+    Hash collision definition: A hash collision occurs when two different keys produce the same hash value and therefore map to the same bucket.
 
     Chaining:
-        Description: (your answer)
-        Worst-case lookup: O(?)
+        Description: Each bucket stores a linked list or other collection of entries that share the same hash value. A lookup checks the bucket and searches through its entries.
+        Worst-case lookup: O(N)
 
     Open Addressing / Linear Probing:
-        Description: (your answer)
-        Worst-case lookup: O(?)
+        Description: If a slot is already occupied, the algorithm probes the next available slot until it finds an empty one or the key. This resolves collisions without storing extra lists.
+        Worst-case lookup: O(N)
     """
 
 
@@ -66,10 +66,14 @@ def grade_frequency_report(results):
     Returns:
         dict: Mapping {'A': int, 'B': int, 'C': int, 'D': int, 'F': int}.
 
-    Time complexity:  O(?)
-    Space complexity: O(?)
+    Time complexity:  O(N)
+    Space complexity: O(1)
     """
-    # TODO: Implement grade_frequency_report.
+    frequency = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'F': 0}
+    for _, grade in results:
+        if grade in frequency:
+            frequency[grade] += 1
+    return frequency
     pass
 
 
@@ -93,10 +97,15 @@ def find_students_with_grade(results, grade):
     Returns:
         list[int]: Sorted list of matching student IDs.
 
-    Time complexity: O(N log N)
-    Why not O(N)?  (fill in your explanation here)
+     Time complexity: O(N log N)
+    Why not O(N)?  The hash table groups students by grade in O(N), but the result must be returned as a sorted list. Sorting the matching IDs takes O(K log K), and in the worst case K can be close to N, so the overall complexity becomes O(N log N).
     """
-    # TODO: Implement find_students_with_grade.
+    students_by_grade = {}
+    for student_id, grade in results:
+        students_by_grade.setdefault(grade, []).append(student_id)
+
+    matching_ids = students_by_grade.get(grade, [])
+    return sorted(matching_ids)
     pass
 
 
@@ -138,7 +147,15 @@ def insert(root, student_id, grade_score):
     Returns:
         BSTNode: The (possibly new) root of the subtree after insertion.
     """
-    # TODO: Implement recursive BST insertion.
+   if root is None:
+        return BSTNode(student_id, grade_score)
+
+    if grade_score < root.grade_score:
+        root.left = insert(root.left, student_id, grade_score)
+    elif grade_score > root.grade_score:
+        root.right = insert(root.right, student_id, grade_score)
+
+    return root
     pass
 
 # TODO: After implementing insert(), draw the resulting tree structure in a
@@ -168,9 +185,13 @@ def inorder_traversal(root):
         tuple: (grade_score, student_id) in ascending order of grade_score.
 
     Why does in-order traversal produce sorted output?
-    (fill in your explanation here)
+    In a BST, every node's left subtree contains smaller keys and every node's right subtree contains larger keys. Visiting left -> root -> right therefore visits keys in ascending order.
     """
-    # TODO: Implement using yield / yield from.
+    if root is None:
+        return
+    yield from inorder_traversal(root.left)
+    yield (root.grade_score, root.student_id)
+    yield from inorder_traversal(root.right)
     pass
 
 
@@ -194,11 +215,17 @@ def search(root, grade_score):
     Returns:
         int | None: The student_id if found, otherwise None.
 
-    Time complexity: O(H) where H = ?
-    When is H = O(log N)?  (explain)
-    When is H = O(N)?      (explain)
+   Time complexity: O(H) where H is the height of the tree.
+    When is H = O(log N)?  When the BST is balanced, so the height grows logarithmically with the number of nodes.
+    When is H = O(N)?      When the BST is skewed (for example, inserted in sorted order), so the height is linear.
     """
-    # TODO: Implement recursive (or iterative) BST search.
+    if root is None:
+        return None
+    if grade_score == root.grade_score:
+        return root.student_id
+    if grade_score < root.grade_score:
+        return search(root.left, grade_score)
+    return search(root.right, grade_score)
     pass
 
 
@@ -218,7 +245,20 @@ def find_range(root, low, high):
     Time complexity: O(H + K) where H = tree height, K = number of results.
     Hint: use BST pruning to avoid visiting unnecessary subtrees.
     """
-    # TODO: Implement find_range with BST pruning.
+    if root is None:
+        return []
+
+    results = []
+    if root.grade_score < low:
+        return find_range(root.right, low, high)
+    if root.grade_score > high:
+        return find_range(root.left, low, high)
+
+    results.extend(find_range(root.left, low, high))
+    if low <= root.grade_score <= high:
+        results.append(root.student_id)
+    results.extend(find_range(root.right, low, high))
+    return results
     pass
 
 
