@@ -47,12 +47,25 @@ def build_conflict_map(sessions):
     Returns:
         dict: Mapping room_id -> list of (index_i, index_j) conflict pairs.
 
-    Time complexity:  O(?)
-    Space complexity: O(?)
+    Time complexity:  O(R * M^2)
+    Space complexity: O(R * M)
     """
-    # TODO: Implement build_conflict_map.
-    # Step 1: Group session indices by room_id using a dictionary.
-    # Step 2: For each room, compare all pairs of sessions for conflicts.
+    room_map = {}
+    for idx, (room_id, start, end) in enumerate(sessions):
+        room_map.setdefault(room_id, []).append((idx, start, end))
+
+    conflict_map = {}
+    for room_id, room_sessions in room_map.items():
+        conflicts = []
+        for i in range(len(room_sessions)):
+            for j in range(i + 1, len(room_sessions)):
+                _, start_i, end_i = room_sessions[i]
+                _, start_j, end_j = room_sessions[j]
+                if start_j < end_i:
+                    conflicts.append((room_sessions[i][0], room_sessions[j][0]))
+        conflict_map[room_id] = conflicts
+    return conflict_map
+
     pass
 
 
@@ -79,9 +92,16 @@ def detect_first_conflict(room_sessions):
     Returns:
         tuple | None: (index_i, index_j) of the first conflict, or None.
 
-    How the Stack is used: (explain your approach in a comment here)
+    How the Stack is used: The stack holds active sessions whose intervals have not yet ended. As each new session arrives, we pop any sessions that are no longer active and then check whether the new session overlaps the most recent active one.
     """
-    # TODO: Implement using a stack (Python list).
+    stack = []
+    for index, start_time, end_time in room_sessions:
+        while stack and start_time >= stack[-1][2]:
+            stack.pop()
+        if stack and start_time < stack[-1][2]:
+            return (stack[-1][0], index)
+        stack.append((index, start_time, end_time))
+    return None
     pass
 
 
@@ -98,20 +118,19 @@ def e3_analysis():
       2. How sorting sessions per room + a single linear scan changes the complexity.
       3. Whether a BST keyed on start_time would offer any advantage over sorting.
     """
-    # TODO: Replace this string with your full written answer.
     return """
     E1 complexity analysis:
-        Grouping step: O(?)
-        Pairwise comparison per room: O(?)
-        Overall worst case: O(?)
-        Space complexity: O(?)
+        Grouping step: O(N)
+        Pairwise comparison per room: O(M^2) for a room with M sessions
+        Overall worst case: O(N^2)
+        Space complexity: O(N)
 
     Improvement via sort + linear scan:
-        (your explanation)
-        New overall complexity: O(?)
+        If each room's sessions are sorted by start time and processed with a single linear scan, each session is pushed and popped at most once, so the cost becomes O(M log M) for sorting plus O(M) for the scan. This improves the worst-case behaviour from quadratic to near-linear per room.
+        New overall complexity: O(N log N)
 
     BST vs sorted array for conflict detection:
-        (your comparison and conclusion)
+        A BST keyed by start time could help with range queries, but it does not beat a sorted array for this specific task because the sessions are already naturally processed in chronological order. Sorting is simpler, deterministic, and provides the same asymptotic benefit for the scan.
     """
 
 
