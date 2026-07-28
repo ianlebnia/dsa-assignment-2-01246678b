@@ -58,15 +58,10 @@ def a1_analysis():
         Space complexity: O(?)
         Explanation: ...
     """
-    """
-   Worst-case time complexity: O(N^2)
+    return """
+     Worst-case time complexity: O(N^2)
     Space complexity: O(1)
     Explanation: The outer loop runs N times and the inner loop runs up to N - i times for each i, so the total number of comparisons is about N + (N - 1) + ... + 1 = N(N + 1)/2. This is quadratic time. The extra space used is constant because it only stores a few variables.
-    """
-    return """
-    Worst-case time complexity: O(?)
-    Space complexity: O(?)
-    Explanation: (your justification here)
     """
 
 
@@ -80,17 +75,12 @@ def a2_analysis():
     """
     Write your analysis here.
     """
-   """
-    Worst-case time complexity: O(N)
+    
+    return """
+     Worst-case time complexity: O(N)
     Space complexity: O(N)
     Data structure that enables the speedup: a hash table (dictionary)
     Space trade-off explanation: The dictionary stores previously seen values and their indices so each lookup and insertion is expected to take O(1) time on average, but it uses extra memory proportional to the number of elements processed.
-    """
-    return """
-    Worst-case time complexity: O(?)
-    Space complexity: O(?)
-    Data structure that enables the speedup: (your answer)
-    Space trade-off explanation: (your answer)
     """
 
 
@@ -104,16 +94,11 @@ def a3_analysis():
     """
     Write your analysis here.
     """
-    """
-    Algorithm name: Insertion Sort
-    Best-case time complexity: O(N)   Input arrangement: the list is already sorted, so each element is inserted with no shifting
-    Worst-case time complexity: O(N^2)  Input arrangement: the list is in reverse order, so each new element must move past many earlier elements
     return 
     """
-    """
-    Algorithm name: (your answer)
-    Best-case time complexity: O(?)   Input arrangement: (describe)
-    Worst-case time complexity: O(?)  Input arrangement: (describe)
+   Algorithm name: Insertion Sort
+    Best-case time complexity: O(N)   Input arrangement: the list is already sorted, so each element is inserted with no shifting
+    Worst-case time complexity: O(N^2)  Input arrangement: the list is in reverse order, so each new element must move past many earlier elements
     """
 
 
@@ -128,17 +113,13 @@ def a4_table():
     Fill in the approximate number of operations at N = 1,000,000
     and rank them from 1 (fastest) to 5 (slowest).
     """
-   {"complexity": "O(1)",        "operations": "1",  "rank": "1"},
+  
+    return [
+         {"complexity": "O(1)",        "operations": "1",  "rank": "1"},
         {"complexity": "O(log N)",    "operations": "≈20",  "rank": "2"},
         {"complexity": "O(N)",        "operations": "1,000,000",  "rank": "3"},
         {"complexity": "O(N log N)",  "operations": "≈20,000,000",  "rank": "4"},
         {"complexity": "O(N^2)",      "operations": "1,000,000,000,000",  "rank": "5"},
-    return [
-        {"complexity": "O(1)",        "operations": "?",  "rank": "?"},
-        {"complexity": "O(log N)",    "operations": "?",  "rank": "?"},
-        {"complexity": "O(N)",        "operations": "?",  "rank": "?"},
-        {"complexity": "O(N log N)",  "operations": "?",  "rank": "?"},
-        {"complexity": "O(N^2)",      "operations": "?",  "rank": "?"},
     ]
 
 
@@ -172,13 +153,10 @@ def a5_explanation():
     """
     Explain why the naive recursive Fibonacci is O(2^N) and not O(N).
     """
-    """
-   Why naive recursion is O(2^N): The recursive definition fib(n) = fib(n - 1) + fib(n - 2) causes the computation to branch into two recursive calls at each level, so the number of calls grows roughly like the Fibonacci sequence and exceeds any linear growth. In the worst case, the call tree contains about 2^N nodes, so the time is exponential.
-    How the iterative version achieves O(N) time and O(1) space: It computes the sequence from the bottom up, keeping only the last two Fibonacci values in memory and updating them in a single loop. Because each value is produced once and each loop iteration does constant work, the run time is linear and the extra space is constant.
+  
     return """
-    """
-    Why naive recursion is O(2^N): (your explanation)
-    How the iterative version achieves O(N) time and O(1) space: (your explanation)
+    Why naive recursion is O(2^N): The recursive definition fib(n) = fib(n - 1) + fib(n - 2) causes the computation to branch into two recursive calls at each level, so the number of calls grows roughly like the Fibonacci sequence and exceeds any linear growth. In the worst case, the call tree contains about 2^N nodes, so the time is exponential.
+    How the iterative version achieves O(N) time and O(1) space: It computes the sequence from the bottom up, keeping only the last two Fibonacci values in memory and updating them in a single loop. Because each value is produced once and each loop iteration does constant work, the run time is linear and the extra space is constant.
     """
 
 
